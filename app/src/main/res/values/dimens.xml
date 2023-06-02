@@ -1,5 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- PADDING -->
+    <dimen name="padding_tiny">2dp</dimen>
+    <dimen name="padding_mini">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_regular">16dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
+    <dimen name="padding_extra_large">24dp</dimen>
+    <dimen name="padding_huge">32dp</dimen>
+
+    <!-- MARGIN -->
+    <dimen name="margin_tiny">4dp</dimen>
+    <dimen name="margin_mini">8dp</dimen>
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_regular">20dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_extra_large">32dp</dimen>
+    <dimen name="margin_huge">50dp</dimen>
+
+    <!-- TEXT_SIZE -->
+    <dimen name="text_size_tiny">10sp</dimen>
+    <dimen name="text_size_mini">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+
+    <!-- Establish it in corresponding style-->
+    <!-- text_size_medium = 14sp by default  -->
+    <dimen name="text_size_regular">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_extra_large">20sp</dimen>
+    <dimen name="text_size_huge">24sp</dimen>
+    <dimen name="text_size_title">30sp</dimen>
+
+    <!-- RADIUS -->
+    <dimen name="radius_small">8dp</dimen>
+    <dimen name="radius_medium">12dp</dimen>
+    <dimen name="radius_regular">16dp</dimen>
+    <dimen name="radius_large">20dp</dimen>
+    <dimen name="radius_extra_large">24dp</dimen>
+    <dimen name="filled_search_view_corner_radius">72dp</dimen>
+
+    <!-- MISCELLANY -->
+    <dimen name="size_zero">0dp</dimen>
+
+    <!-- STROKE -->
+    <dimen name="stroke_width_profile_image">2dp</dimen>
+
+    <!-- ELEVATION -->
+    <dimen name="elevation_profile_card">12dp</dimen>
+
 </resources>
