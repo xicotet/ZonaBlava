@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ZonaBlava</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Inicio</string>
+    <string name="title_ticket">Tickets</string>
+    <string name="title_vehicles">Vehículos</string>
+    <string name="title_account">Cuenta</string>
 </resources>
