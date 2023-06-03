@@ -21,6 +21,14 @@
     ]
   },
   {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "landscape",
     "elementType": "geometry",
     "stylers": [
