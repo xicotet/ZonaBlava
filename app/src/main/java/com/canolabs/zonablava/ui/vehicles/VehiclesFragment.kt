@@ -1,18 +1,17 @@
-package com.canolabs.zonablava.ui.home
+package com.canolabs.zonablava.ui.vehicles
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.canolabs.zonablava.databinding.FragmentHomeBinding
+import com.canolabs.zonablava.databinding.FragmentVehiclesBinding
 
-class HomeFragment : Fragment() {
+class VehiclesFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentVehiclesBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -23,17 +22,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
+        val vehiclesViewModel =
+            ViewModelProvider(this)[VehiclesViewModel::class.java]
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentVehiclesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Hide the action bar
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textVehicles
+        vehiclesViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
