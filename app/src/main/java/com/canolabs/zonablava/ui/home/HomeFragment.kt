@@ -57,7 +57,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onDestroyView()
         //To show normal Status Bar in other fragments
         activity?.window?.statusBarColor =
-            ContextCompat.getColor(requireContext(), R.color.secondary_color)
+            ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
         _binding = null
     }
 
