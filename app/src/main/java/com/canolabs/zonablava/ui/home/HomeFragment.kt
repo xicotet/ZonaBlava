@@ -8,9 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.canolabs.zonablava.R
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
@@ -33,6 +37,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             statusBarColor = Color.TRANSPARENT
         }
+
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -60,7 +65,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         map?.let {
             googleMap = it
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-            googleMap.uiSettings.isZoomControlsEnabled = true
+
+            // Load map style from resource file
+            val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
+            googleMap.setMapStyle(mapStyleOptions)
+
+            val locationLaVall = LatLng(39.821556, -0.223534)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLaVall, 12f))
+            // googleMap.addMarker(MarkerOptions().position(locationLaVall).title("Mi ubicación"))
         }
     }
     override fun onResume() {
@@ -77,6 +89,4 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onDestroy()
         mapView.onDestroy()
     }
-
-
 }
