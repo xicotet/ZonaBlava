@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_tickets"
-        android:name="com.canolabs.zonablava.ui.dashboard.TicketsFragment"
+        android:name="com.canolabs.zonablava.ui.tickets.TicketsFragment"
         android:label="@string/title_ticket"
         tools:layout="@layout/fragment_tickets" />
 
     <fragment
         android:id="@+id/navigation_vehicles"
-        android:name="com.canolabs.zonablava.ui.notifications.VehiclesFragment"
+        android:name="com.canolabs.zonablava.ui.vehicles.VehiclesFragment"
         android:label="@string/title_vehicles"
         tools:layout="@layout/fragment_vehicles" />
 

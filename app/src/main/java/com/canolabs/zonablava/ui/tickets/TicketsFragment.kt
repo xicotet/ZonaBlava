@@ -1,4 +1,4 @@
-package com.canolabs.zonablava.ui.dashboard
+package com.canolabs.zonablava.ui.tickets
 
 import android.os.Bundle
 import android.view.LayoutInflater

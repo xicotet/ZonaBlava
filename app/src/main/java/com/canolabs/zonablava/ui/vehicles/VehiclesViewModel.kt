@@ -1,4 +1,4 @@
-package com.canolabs.zonablava.ui.notifications
+package com.canolabs.zonablava.ui.vehicles
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

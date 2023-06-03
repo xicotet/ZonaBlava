@@ -1,4 +1,4 @@
-package com.canolabs.zonablava.ui.dashboard
+package com.canolabs.zonablava.ui.tickets
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

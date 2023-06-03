@@ -1,4 +1,4 @@
-package com.canolabs.zonablava.ui.notifications
+package com.canolabs.zonablava.ui.vehicles
 
 import android.os.Bundle
 import android.view.LayoutInflater
