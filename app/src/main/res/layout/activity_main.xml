@@ -26,6 +26,7 @@
         android:paddingBottom="16dp"
         android:background="@color/md_theme_light_background"
         app:menu="@menu/bottom_nav_menu"
+        app:itemBackground="@drawable/nav_item_active_indicator_selector"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

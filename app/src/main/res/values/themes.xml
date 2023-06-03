@@ -50,5 +50,4 @@
         <item name="labelVisibilityMode">labeled</item>
         <item name="menu">@menu/bottom_nav_menu</item>
     </style>
-
 </resources>
