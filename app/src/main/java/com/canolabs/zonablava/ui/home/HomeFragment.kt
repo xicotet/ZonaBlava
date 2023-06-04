@@ -14,6 +14,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 
@@ -62,7 +63,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: GoogleMap) {
-        map?.let {
+        map.let {
             googleMap = it
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
@@ -70,11 +71,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
             googleMap.setMapStyle(mapStyleOptions)
 
-            val locationLaVall = LatLng(39.821556, -0.223534)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationLaVall, 12f))
-            // googleMap.addMarker(MarkerOptions().position(locationLaVall).title("Mi ubicación"))
+            val locationValencia = LatLng(39.465421, -0.369390)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationValencia, 13f))
+
+            // Add a marker at the initial position
+            val marker = googleMap.addMarker(MarkerOptions().position(locationValencia).title("Mi ubicación"))
+
+            googleMap.setOnCameraMoveListener {
+                // Update marker position with interpolated position
+                marker!!.position = updateMarkerPositionWithInterpolation(marker, 0.3f)
+            }
         }
     }
+
+    private fun updateMarkerPositionWithInterpolation(marker: Marker, fraction: Float): LatLng {
+        val startPosition = marker.position
+        val endPosition = googleMap.cameraPosition.target
+
+        return LatLng(
+            startPosition.latitude + (endPosition.latitude - startPosition.latitude) * fraction,
+            startPosition.longitude + (endPosition.longitude - startPosition.longitude) * fraction
+        )
+    }
+
     override fun onResume() {
         super.onResume()
         mapView.onResume()
