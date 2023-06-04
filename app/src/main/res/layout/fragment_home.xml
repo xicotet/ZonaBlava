@@ -27,7 +27,7 @@
         android:text="@string/home_search_bar_title"
         android:drawableLeft="@drawable/search"
         android:drawablePadding="@dimen/padding_medium"
-        android:textSize="@dimen/text_size_regular"
+        android:textSize="@dimen/text_size_small"
         android:fontFamily="@font/ezra_medium"
         android:textColor="@color/md_theme_light_onBackground"
         android:gravity="start|center_vertical"
