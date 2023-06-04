@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.canolabs.zonablava.R
 import com.canolabs.zonablava.databinding.ActivityMainBinding
@@ -43,9 +42,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_account
             )
         )
-
-        // Automatically updates the top app bar title
-        setupActionBarWithNavController(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
     }

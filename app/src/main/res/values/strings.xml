@@ -4,4 +4,7 @@
     <string name="title_ticket">Tickets</string>
     <string name="title_vehicles">Vehículos</string>
     <string name="title_account">Cuenta</string>
+
+    <!-- HomeFragment -->
+    <string name="home_search_bar_title">¿Donde quieres aparcar?</string>
 </resources>

@@ -51,4 +51,9 @@
     <!-- ELEVATION -->
     <dimen name="elevation_profile_card">12dp</dimen>
 
+    <!-- Navigation bar active indicator dimensions -->
+    <dimen name="active_indicator_corner_radius">12dp</dimen>
+    <dimen name="active_indicator_width">64dp</dimen>
+    <dimen name="active_indicator_height">32dp</dimen>
+
 </resources>
