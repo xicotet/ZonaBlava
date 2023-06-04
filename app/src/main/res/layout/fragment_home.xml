@@ -28,7 +28,7 @@
         android:drawableLeft="@drawable/search"
         android:drawablePadding="@dimen/padding_medium"
         android:textSize="@dimen/text_size_regular"
-        android:fontFamily="@font/roboto_medium"
+        android:fontFamily="@font/ezra_medium"
         android:textColor="@color/md_theme_light_onBackground"
         android:gravity="start|center_vertical"
         app:layout_constraintLeft_toLeftOf="parent"
