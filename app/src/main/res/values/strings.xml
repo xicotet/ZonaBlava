@@ -7,4 +7,9 @@
 
     <!-- HomeFragment -->
     <string name="home_search_bar_title">¿Donde quieres aparcar?</string>
+    <string name="content_description_bottom_sheet_permission">Image representing a map with a marker on it</string>
+    <string name="bottom_sheet_permission_allow">Activar permiso</string>
+    <string name="bottom_sheet_permission_maybe_later">Quizás más tarde</string>
+    <string name="bottom_sheet_permission_explanation">Establece tu ubicación para que podamos localizar tu lugar de aparcamiento</string>
+    <string name="bottom_sheet_permission_title">Permiso de localización</string>
 </resources>

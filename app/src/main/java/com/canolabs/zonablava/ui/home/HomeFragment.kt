@@ -2,10 +2,14 @@ package com.canolabs.zonablava.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
 import com.canolabs.zonablava.R
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -16,14 +20,27 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 
 
-class HomeFragment : Fragment(), OnMapReadyCallback {
+class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+
+    private val requestLocationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { permissionGranted ->
+            if (permissionGranted) {
+                Log.d("permissionGranted", "permission granted in requestLocationPermissionLauncher")
+            } else {
+                // Permission denied, handle accordingly (show an error message, etc.)
+                // ...
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +69,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.myLocationButton.setOnClickListener(this)
     }
 
     override fun onDestroyView() {
@@ -77,9 +95,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             // Add a marker at the initial position
             val marker = googleMap.addMarker(MarkerOptions().position(locationValencia).title("Mi ubicación"))
 
+            // Disable rotate gestures
+            googleMap.uiSettings.isRotateGesturesEnabled = false
+
+            googleMap.uiSettings.isMyLocationButtonEnabled = true
+
             googleMap.setOnCameraMoveListener {
+                val currentZoom = googleMap.cameraPosition.zoom
+                val fraction = if (currentZoom <= 15) 0.4f else 0.3f
                 // Update marker position with interpolated position
-                marker!!.position = updateMarkerPositionWithInterpolation(marker, 0.3f)
+                Log.d("fraction", "$currentZoom $fraction")
+                marker!!.position = updateMarkerPositionWithInterpolation(marker, fraction)
             }
         }
     }
@@ -107,5 +133,56 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         mapView.onDestroy()
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.myLocationButton -> requestLocationPermissions()
+        }
+    }
+
+    private fun requestLocationPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        // Check if the permissions are already granted
+        if (!arePermissionsGranted(permissions)) {
+            showLocationPermissionsBottomSheet(permissions)
+        } else {
+            Log.d("permission_granted", "permission is already granted: no bottom sheet needed")
+            // bottomSheetDialog.show()
+        }
+    }
+
+    private fun arePermissionsGranted(permissions: Array<String>): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun showLocationPermissionsBottomSheet(permissions: Array<String>) {
+        val binding = BottomSheetLocationPermissionBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(binding.root)
+
+        binding.bottomSheetAllowButton.setOnClickListener {
+            requestLocationPermissionLauncher.launch(permissions.first())
+        }
+
+        binding.bottomSheetDismissButton.setOnClickListener {
+            // Carry on without location permission
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
     }
 }
