@@ -40,6 +40,8 @@
     <dimen name="radius_regular">16dp</dimen>
     <dimen name="radius_large">20dp</dimen>
     <dimen name="radius_extra_large">24dp</dimen>
+
+    <!-- This could be deleted if is in LocSe -->
     <dimen name="filled_search_view_corner_radius">72dp</dimen>
 
     <!-- MISCELLANY -->
@@ -52,7 +54,7 @@
     <dimen name="elevation_profile_card">12dp</dimen>
 
     <!-- Navigation bar active indicator dimensions -->
-    <dimen name="active_indicator_corner_radius">12dp</dimen>
+    <dimen name="active_indicator_corner_radius">16dp</dimen>
     <dimen name="active_indicator_width">64dp</dimen>
     <dimen name="active_indicator_height">32dp</dimen>
 
