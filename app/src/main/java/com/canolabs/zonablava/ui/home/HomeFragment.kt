@@ -63,11 +63,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // Precise location access granted.
                     Log.d("permission_granted", "3. Precise location access granted ")
                     Log.d("permission_granted", "3. Get user precise location asynchronously ")
+                    binding.myLocationButton.setImageResource(R.drawable.my_location_fill)
 
                     if (isBottomSheetChangeToFineLocationDialogShowing) {
                         Log.d("permission_granted", "3. ChangeToFine location bottom sheet was showing, proceed to hide")
                         isBottomSheetChangeToFineLocationDialogShowing = false
-                        bottomSheetChangeToFineLocationDialog?.hide()
+                        bottomSheetChangeToFineLocationDialog?.dismiss()
+                        bottomSheetChangeToFineLocationDialog = null
+
+                        isBottomSheetPermissionDialogShowing = false
                         bottomSheetPermissionDialog?.dismiss()
                         bottomSheetPermissionDialog = null
                     }
@@ -81,6 +85,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                     // Only approximate location access granted.
+                    Log.d("permission_granted", "3. Approximate location access granted ")
+                    Log.d("permission_granted", "3. Get user approximate location asynchronously ")
+                    binding.myLocationButton.setImageResource(R.drawable.my_location_aproximate)
                     if (isBottomSheetPermissionDialogShowing) {
                         isBottomSheetPermissionDialogShowing = false
                         bottomSheetPermissionDialog?.hide()
@@ -111,7 +118,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 if (arePermissionsGranted(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))) {
                     Log.d("permission_granted", "0. Precise location access granted ")
                     Log.d("permission_granted", "0. Get user precise location asynchronously ")
+                    binding.myLocationButton.setImageResource(R.drawable.my_location_fill)
                 } else if (arePermissionsGranted(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION))) {
+                    bottomSheetChangeToFineLocationDialog?.hide()
+                    isBottomSheetChangeToFineLocationDialogShowing = false
+                    Log.d("permission_granted", "0. Aproximate location access granted ")
+                    Log.d("permission_granted", "0. Get user approximate location asynchronously")
+                    binding.myLocationButton.setImageResource(R.drawable.my_location_aproximate)
                     showChangeToFineLocationBottomSheet()
                 } else {
                     requestLocationPermissions()
@@ -148,8 +161,12 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
             binding.bottomSheetChangeToFineLocationDismissButton.setOnClickListener {
                 // Carry on without fine location permission
+                Log.d("permission_granted", "4. 'Carry on' button clicked in ChangeToFineLocation Bottom Sheet Dialog ")
                 if (isBottomSheetChangeToFineLocationDialogShowing) {
+                    Log.d("permission_granted", "4. Approximate location access granted ")
+                    Log.d("permission_granted", "4. Get user approximate location asynchronously ")
                     Log.d("permission_granted", "4. Bottom sheet was showing but now will not")
+
                     isBottomSheetChangeToFineLocationDialogShowing = false
                     bottomSheetChangeToFineLocationDialog?.hide()
                 }
@@ -157,15 +174,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         }
 
         systemRationaleAppearanceCount = 0
-        // If permission dialog was showing for some reason, hide it
-        if (isBottomSheetPermissionDialogShowing) {
-            isBottomSheetPermissionDialogShowing = false
-            bottomSheetPermissionDialog?.hide()
-        }
+
 
         Log.d("permission_granted", "4. Entering show change to fine location permission bottom sheet")
         if (!isBottomSheetChangeToFineLocationDialogShowing) {
+            Log.d("permission_granted", "4. Wasn't showing, so definitely entering")
             isBottomSheetChangeToFineLocationDialogShowing = true
+            Log.d("permission_granted", "4. bottomSheetChangeToFineLocationDialog is null: " + (bottomSheetPermissionDialog == null))
             bottomSheetChangeToFineLocationDialog?.show()
         }
 
@@ -286,6 +301,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
         binding.myLocationButton.setOnClickListener(this)
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
         systemRationaleAppearanceCount = 0
