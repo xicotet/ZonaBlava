@@ -28,14 +28,21 @@ import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
+import com.canolabs.zonablava.helpers.Constants
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
+    private lateinit var locationFetcher: LocationFetcher
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
+
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
+    private var marker: Marker? = null
 
     private var bottomSheetPermissionDialog: BottomSheetDialog? = null
     private var isBottomSheetPermissionDialogShowing: Boolean = false
@@ -63,6 +70,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // Precise location access granted.
                     Log.d("permission_granted", "3. Precise location access granted ")
                     Log.d("permission_granted", "3. Get user precise location asynchronously ")
+                    fetchCurrentLocation()
                     binding.myLocationButton.setImageResource(R.drawable.my_location_fill)
 
                     if (isBottomSheetChangeToFineLocationDialogShowing) {
@@ -87,6 +95,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // Only approximate location access granted.
                     Log.d("permission_granted", "3. Approximate location access granted ")
                     Log.d("permission_granted", "3. Get user approximate location asynchronously ")
+                    fetchCurrentLocation()
                     binding.myLocationButton.setImageResource(R.drawable.my_location_aproximate)
                     if (isBottomSheetPermissionDialogShowing) {
                         isBottomSheetPermissionDialogShowing = false
@@ -118,12 +127,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 if (arePermissionsGranted(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))) {
                     Log.d("permission_granted", "0. Precise location access granted ")
                     Log.d("permission_granted", "0. Get user precise location asynchronously ")
+                    fetchCurrentLocation()
                     binding.myLocationButton.setImageResource(R.drawable.my_location_fill)
                 } else if (arePermissionsGranted(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION))) {
                     bottomSheetChangeToFineLocationDialog?.hide()
                     isBottomSheetChangeToFineLocationDialogShowing = false
                     Log.d("permission_granted", "0. Aproximate location access granted ")
                     Log.d("permission_granted", "0. Get user approximate location asynchronously")
+                    fetchCurrentLocation()
                     binding.myLocationButton.setImageResource(R.drawable.my_location_aproximate)
                     showChangeToFineLocationBottomSheet()
                 } else {
@@ -166,6 +177,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     Log.d("permission_granted", "4. Approximate location access granted ")
                     Log.d("permission_granted", "4. Get user approximate location asynchronously ")
                     Log.d("permission_granted", "4. Bottom sheet was showing but now will not")
+                    fetchCurrentLocation()
 
                     isBottomSheetChangeToFineLocationDialogShowing = false
                     bottomSheetChangeToFineLocationDialog?.hide()
@@ -226,6 +238,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 bottomSheetPermissionDialog?.hide()
             }
             Log.d("permission_granted", "1. Get user location asynchronously ")
+            fetchCurrentLocation()
         }
     }
 
@@ -268,6 +281,25 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         bottomSheetPermissionDialog!!.show()
     }
 
+    private fun fetchCurrentLocation() {
+        Log.d("permission_granted", "5. Fetching user location")
+        lifecycleScope.launch {
+            try {
+                delay(200)
+                Log.d("permission_granted", "5. Launching corroutine")
+                val location = locationFetcher.fetchLocation()
+                Log.d("permission_granted", "5. Latitude: ${location.latitude}, Longitude: ${location.longitude}")
+                marker!!.isVisible = false
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+                marker!!.isVisible = true
+            //transitionToPosition(location, 20)
+            } catch (e: Exception) {
+                // Handle the exception
+                Log.e("permission_granted", "5. Failed to fetch location: ${e.message}")
+            }
+        }
+    }
+
     fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", requireContext().packageName, null)
@@ -301,6 +333,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        locationFetcher = LocationFetcher(requireContext())
         binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
         binding.myLocationButton.setOnClickListener(this)
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
@@ -324,11 +357,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
             googleMap.setMapStyle(mapStyleOptions)
 
-            val locationValencia = LatLng(39.465421, -0.369390)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locationValencia, 13f))
+            val defaultLocation = LatLng(Constants.DEFAULT_LOCATION_LATITUDE, Constants.DEFAULT_LOCATION_LONGITUDE)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 13f))
 
             // Add a marker at the initial position
-            val marker = googleMap.addMarker(MarkerOptions().position(locationValencia).title("Mi ubicación"))
+            marker = googleMap.addMarker(MarkerOptions().position(defaultLocation).title("Mi ubicación"))
 
             // Disable rotate gestures
             googleMap.uiSettings.isRotateGesturesEnabled = false
@@ -340,7 +373,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 val fraction = if (currentZoom <= 15) 0.4f else 0.3f
                 // Update marker position with interpolated position
                 Log.d("fraction", "$currentZoom $fraction")
-                marker!!.position = updateMarkerPositionWithInterpolation(marker, fraction)
+                // marker should not be null if and only if the addMarker() above can not return a null
+                marker!!.position = updateMarkerPositionWithInterpolation(marker!!, fraction)
             }
         }
     }
