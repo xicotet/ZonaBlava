@@ -45,15 +45,13 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="itemIconSize">24dp</item>
-        <item name="itemFillColor">@color/md_theme_light_primary</item>
-        <item name="labelVisibilityMode">labeled</item>
-        <item name="menu">@menu/bottom_nav_menu</item>
+    <style name="CustomSearchBarStyle" parent="Widget.Material3.SearchBar">
+        <item name="android:textColorHint">@color/md_theme_dark_background</item>
+        <item name="android:textAppearance">@style/CustomSearchBarTextAppearance</item>
+    </style>
+
+    <style name="CustomSearchBarTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/ezra_medium</item>
+        <item name="android:textSize">@dimen/text_size_regular</item>
     </style>
 </resources>
