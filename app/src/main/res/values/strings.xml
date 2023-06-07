@@ -6,5 +6,21 @@
     <string name="title_account">Cuenta</string>
 
     <!-- HomeFragment -->
-    <string name="home_search_bar_title">¿Donde quieres aparcar?</string>
+    <string name="home_search_bar_title">¿Dónde quieres aparcar?</string>
+
+    <string name="content_description_bottom_sheet_permission">Imagen que representa un mapa con un marcador sobre él</string>
+    <string name="content_description_bottom_sheet_change_fine_location">Imagen que representa una persona mirando a través de un telescopio</string>
+    <string name="content_description_map_view">Esto es un mapa que inicialmente está centrado en la ciudad de Valencia (España)</string>
+    <string name="content_description_my_location_button">Esto es un botón para posicionar en el mapa tu ubicación</string>
+    <string name="content_description_settings_button">Esto es un botón para abrir los ajustes del mapa</string>
+
+    <string name="bottom_sheet_permission_allow">Activar permiso</string>
+    <string name="bottom_sheet_permission_maybe_later">Quizás más tarde</string>
+    <string name="bottom_sheet_permission_explanation">Establece tu ubicación para que podamos localizar tu lugar de aparcamiento</string>
+    <string name="bottom_sheet_permission_title">Permiso de ubicación</string>
+
+    <string name="bottom_sheet_change_to_fine_location_title">Comparte tu ubicación precisa</string>
+    <string name="bottom_sheet_change_to_fine_location_allow">Cambiar a ubicación precisa</string>
+    <string name="bottom_sheet_change_to_fine_location_carry_on">Seguir sin ella</string>
+    <string name="bottom_sheet_change_to_fine_location_explanation">Nos gustaría utilizar tu ubicación precisa para posicionar exactamente tu lugar de aparcamiento</string>
 </resources>

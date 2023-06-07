@@ -1,8 +1,8 @@
 package com.canolabs.zonablava.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
@@ -10,8 +10,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.canolabs.zonablava.R
 import com.canolabs.zonablava.databinding.ActivityMainBinding
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
@@ -32,6 +35,9 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
 
+        // To prevent error using play-services-maps alongside with MapView
+        MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -45,4 +51,18 @@ class MainActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navController)
     }
+
+    override fun onMapsSdkInitialized(renderer: MapsInitializer.Renderer) {
+        when (renderer) {
+            MapsInitializer.Renderer.LATEST -> Log.d(
+                "MapsDemo",
+                "The latest version of the renderer is used."
+            )
+            MapsInitializer.Renderer.LEGACY -> Log.d(
+                "MapsDemo",
+                "The legacy version of the renderer is used."
+            )
+        }
+    }
+
 }

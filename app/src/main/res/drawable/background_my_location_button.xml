@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_theme_light_onPrimary" /> <!-- Use your desired almost white color here -->
+    <corners android:radius="400dp" /> <!-- Adjust the radius to make it more or less circular -->
+
+    <padding
+        android:left="@dimen/padding_regular"
+        android:top="@dimen/padding_regular"
+        android:right="@dimen/padding_regular"
+        android:bottom="@dimen/padding_regular" />
+</shape>
