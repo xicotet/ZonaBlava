@@ -30,19 +30,34 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.canolabs.zonablava.helpers.Constants
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 
 class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
-    private lateinit var locationFetcher: LocationFetcher
+    // private var isFetchingUserLocation: Boolean = false
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
 
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
-    private var marker: Marker? = null
+
+    // Custom class LocationFetcher
+    private lateinit var locationFetcher: LocationFetcher
+
+    // Ensures that only one coroutine can modify the value at a time, and other coroutines will receive the
+    // updated value when they access it. This CAN NOT be modified outside this class
+    private val _lastKnownUserLocation: MutableStateFlow<LatLng?> = MutableStateFlow(null)
+
+    // Expose the StateFlow to other classes as a read-only property
+    // val lastKnownUserLocation: MutableStateFlow<LatLng?>
+
+    private var markerParkCar: Marker? = null
+    private val markerLastKnownUserLocation: MutableStateFlow<Marker?> = MutableStateFlow(null)
 
     private var bottomSheetPermissionDialog: BottomSheetDialog? = null
     private var isBottomSheetPermissionDialogShowing: Boolean = false
@@ -88,7 +103,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                         isBottomSheetPermissionDialogShowing = false
                         bottomSheetPermissionDialog?.hide()
                     }
-
                 }
 
                 permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
@@ -119,6 +133,125 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             }
         }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val homeViewModel =
+            ViewModelProvider(this)[HomeViewModel::class.java]
+
+        // Make status bar transparent (in some devices) and so the map occupies more screen
+        activity?.window?.apply {
+            decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            statusBarColor = Color.TRANSPARENT
+        }
+
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        mapView = binding.mapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        locationFetcher = LocationFetcher(requireContext())
+        binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
+        binding.myLocationButton.setOnClickListener(this)
+        Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
+        systemRationaleAppearanceCount = 0
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        map.let {
+            googleMap = it
+            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+            // Load map style from resource file
+            val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
+            googleMap.setMapStyle(mapStyleOptions)
+
+            val defaultLocation = LatLng(Constants.DEFAULT_LOCATION_LATITUDE, Constants.DEFAULT_LOCATION_LONGITUDE)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 13f))
+
+            markerParkCar = googleMap.addMarker(
+                MarkerOptions()
+                    .position(defaultLocation)
+                    .title("Aparcar aquí")
+                    .visible(true)
+                    .zIndex(2.0f)
+            )
+
+            markerLastKnownUserLocation.value = googleMap.addMarker(
+                MarkerOptions()
+                    .position(defaultLocation).title("Mi ubicación")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_filled_bitmap))
+                    .zIndex(1.0f)
+                    .visible(false)
+            )
+
+            // Disable rotate gestures
+            googleMap.uiSettings.isRotateGesturesEnabled = false
+
+            googleMap.uiSettings.isMyLocationButtonEnabled = true
+
+            // This line sets a listener that will be triggered when the camera position of the Google Map changes. It
+            // means that whenever the user moves or zooms the map, the code inside the listener will be executed
+            googleMap.setOnCameraMoveListener {
+                    val currentZoom = googleMap.cameraPosition.zoom
+                    val fraction = if (currentZoom <= 15) 0.4f else 0.3f
+                    // Update marker position with interpolated position
+                    Log.d("update_marker_position", "$currentZoom $fraction")
+                    // marker should not be null if and only if the addMarker() above can not return a null
+                    if (markerParkCar != null) {
+                        markerParkCar!!.position = updateMarkerPositionWithInterpolation(markerParkCar!!, fraction)
+                    } else {
+                        // If program arrives here, maybe there was a null value when initializing marker in line googleMap.addMarker()
+                        Log.e("permission_granted", "onMapReady() | For some strange reason, marker value was null")
+                    }
+            }
+        }
+    }
+
+    private fun updateMarkerPositionWithInterpolation(marker: Marker, fraction: Float): LatLng {
+        // The marker position that this functions updates is markerParkCar (not markerLastKnownUserLocation)
+        val startPosition = marker.position
+        val endPosition = googleMap.cameraPosition.target
+
+        return LatLng(
+            startPosition.latitude + (endPosition.latitude - startPosition.latitude) * fraction,
+            startPosition.longitude + (endPosition.longitude - startPosition.longitude) * fraction
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //To show normal Status Bar in other fragments
+        activity?.window?.statusBarColor =
+            ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
+        _binding = null
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(view: View?) {
         when (view?.id) {
@@ -138,6 +271,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     binding.myLocationButton.setImageResource(R.drawable.my_location_aproximate)
                     showChangeToFineLocationBottomSheet()
                 } else {
+                    binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
                     requestLocationPermissions()
                 }
             }
@@ -187,7 +321,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         systemRationaleAppearanceCount = 0
 
-
         Log.d("permission_granted", "4. Entering show change to fine location permission bottom sheet")
         if (!isBottomSheetChangeToFineLocationDialogShowing) {
             Log.d("permission_granted", "4. Wasn't showing, so definitely entering")
@@ -195,8 +328,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             Log.d("permission_granted", "4. bottomSheetChangeToFineLocationDialog is null: " + (bottomSheetPermissionDialog == null))
             bottomSheetChangeToFineLocationDialog?.show()
         }
-
     }
+
     private fun arePermissionsGranted(permissions: Array<String>): Boolean {
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(
@@ -282,125 +415,78 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     }
 
     private fun fetchCurrentLocation() {
+        //isFetchingUserLocation = true
+        markerParkCar?.isVisible = false
+        markerLastKnownUserLocation.value?.isVisible = false
+
         Log.d("permission_granted", "5. Fetching user location")
-        lifecycleScope.launch {
-            try {
-                delay(200)
-                Log.d("permission_granted", "5. Launching corroutine")
-                val location = locationFetcher.fetchLocation()
-                Log.d("permission_granted", "5. Latitude: ${location.latitude}, Longitude: ${location.longitude}")
-                marker!!.isVisible = false
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
-                marker!!.isVisible = true
-            //transitionToPosition(location, 20)
-            } catch (e: Exception) {
-                // Handle the exception
-                Log.e("permission_granted", "5. Failed to fetch location: ${e.message}")
+
+        // The failure of one location fetch doesn't affect the others;
+        // shouldn't propagate the failure to the other corroutines
+        val job = lifecycleScope.launch {
+            supervisorScope {
+                try {
+                    repeatLocationFetch(3)
+                } catch (e: Exception) {
+                    // Handle the exception
+                    Log.e("permission_granted", "5. Failed to fetch location: ${e.message}")
+                }
             }
+        }
+
+        job.invokeOnCompletion {
+            // Adjust marker position to match the user location (interpolation caused a deviated position)
+            if (markerLastKnownUserLocation.value?.position != null) {
+                markerParkCar?.position = markerLastKnownUserLocation.value?.position!!
+                Log.d("permission_granted", "5. MarkerParkCar location: ${markerParkCar?.position}")
+            }
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(_lastKnownUserLocation.value!!, 16f))
+
+            markerParkCar?.isVisible = true
+            markerLastKnownUserLocation.value?.isVisible = true
         }
     }
 
-    fun openAppSettings() {
+    private suspend fun repeatLocationFetch(iterations: Int) {
+        // Please ensure that iterations is not too high since this is a recursive function
+
+        /*
+           It's important to note that multiple coroutines may execute concurrently this function
+           Potentially race conditions should not occur in 'userLocation' variable because of using StateFlow
+           'mostRecentUserLocation' variable should not also be a problem since every thread creates its own variable
+           If there are any other shared resources or mutable state outside the scope
+           of the coroutine, proper synchronization mechanisms should be used to ensure thread safety.
+        */
+
+        if (iterations <= 0) {
+            //isFetchingUserLocation = false
+            return
+        }
+        Log.d("permission_granted", "6. Launching coroutine")
+
+        val mostRecentUserLocation = locationFetcher.fetchLocation()
+        Log.d("permission_granted", "6. Most Recent User Location | Latitude: ${mostRecentUserLocation.latitude}, Longitude: ${mostRecentUserLocation.longitude}")
+        Log.d("permission_granted", "6. Last Known User Location Stored in StateFlow | Latitude: ${_lastKnownUserLocation.value?.latitude}, Longitude: ${_lastKnownUserLocation.value?.longitude}")
+
+        if (_lastKnownUserLocation.value != mostRecentUserLocation) {
+            _lastKnownUserLocation.value = mostRecentUserLocation
+            markerLastKnownUserLocation.value?.position = mostRecentUserLocation
+
+            // Point the park marker to the last user locaton position
+            markerParkCar?.position = mostRecentUserLocation
+        }
+
+        // Following delay could be omitted because it's a recursive function,
+        // but be aware of performance implications and computational load
+        delay(300)
+        repeatLocationFetch(iterations - 1)
+    }
+
+    private fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", requireContext().packageName, null)
         intent.data = uri
         startActivity(intent)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
-
-        activity?.window?.apply {
-            decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            statusBarColor = Color.TRANSPARENT
-        }
-
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        locationFetcher = LocationFetcher(requireContext())
-        binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
-        binding.myLocationButton.setOnClickListener(this)
-        Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
-        systemRationaleAppearanceCount = 0
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //To show normal Status Bar in other fragments
-        activity?.window?.statusBarColor =
-            ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
-        _binding = null
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        map.let {
-            googleMap = it
-            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-
-            // Load map style from resource file
-            val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
-            googleMap.setMapStyle(mapStyleOptions)
-
-            val defaultLocation = LatLng(Constants.DEFAULT_LOCATION_LATITUDE, Constants.DEFAULT_LOCATION_LONGITUDE)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 13f))
-
-            // Add a marker at the initial position
-            marker = googleMap.addMarker(MarkerOptions().position(defaultLocation).title("Mi ubicación"))
-
-            // Disable rotate gestures
-            googleMap.uiSettings.isRotateGesturesEnabled = false
-
-            googleMap.uiSettings.isMyLocationButtonEnabled = true
-
-            googleMap.setOnCameraMoveListener {
-                val currentZoom = googleMap.cameraPosition.zoom
-                val fraction = if (currentZoom <= 15) 0.4f else 0.3f
-                // Update marker position with interpolated position
-                Log.d("fraction", "$currentZoom $fraction")
-                // marker should not be null if and only if the addMarker() above can not return a null
-                marker!!.position = updateMarkerPositionWithInterpolation(marker!!, fraction)
-            }
-        }
-    }
-
-    private fun updateMarkerPositionWithInterpolation(marker: Marker, fraction: Float): LatLng {
-        val startPosition = marker.position
-        val endPosition = googleMap.cameraPosition.target
-
-        return LatLng(
-            startPosition.latitude + (endPosition.latitude - startPosition.latitude) * fraction,
-            startPosition.longitude + (endPosition.longitude - startPosition.longitude) * fraction
-        )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
     }
 }

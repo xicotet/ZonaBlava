@@ -8,8 +8,11 @@
     <!-- HomeFragment -->
     <string name="home_search_bar_title">¿Dónde quieres aparcar?</string>
 
-    <string name="content_description_bottom_sheet_permission">Image representing a map with a marker on it</string>
-    <string name="content_description_bottom_sheet_change_fine_location">Image representing a human looking through a telescope</string>
+    <string name="content_description_bottom_sheet_permission">Imagen que representa un mapa con un marcador sobre él</string>
+    <string name="content_description_bottom_sheet_change_fine_location">Imagen que representa una persona mirando a través de un telescopio</string>
+    <string name="content_description_map_view">Esto es un mapa que inicialmente está centrado en la ciudad de Valencia (España)</string>
+    <string name="content_description_my_location_button">Esto es un botón para posicionar en el mapa tu ubicación</string>
+    <string name="content_description_settings_button">Esto es un botón para abrir los ajustes del mapa</string>
 
     <string name="bottom_sheet_permission_allow">Activar permiso</string>
     <string name="bottom_sheet_permission_maybe_later">Quizás más tarde</string>
