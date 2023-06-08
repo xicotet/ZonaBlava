@@ -29,6 +29,7 @@ import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.helpers.Constants
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import kotlinx.coroutines.delay
@@ -160,9 +161,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         locationFetcher = LocationFetcher(requireContext())
+
         binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
         binding.myLocationButton.setOnClickListener(this)
+
+        val searchButton = binding.searchButton
+        searchButton.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_home_to_navigation_search)
+        }
+
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
         systemRationaleAppearanceCount = 0
     }

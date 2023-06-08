@@ -45,13 +45,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="CustomSearchBarStyle" parent="Widget.Material3.SearchBar">
-        <item name="android:textColorHint">@color/md_theme_dark_background</item>
-        <item name="android:textAppearance">@style/CustomSearchBarTextAppearance</item>
-    </style>
-
-    <style name="CustomSearchBarTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="fontFamily">@font/ezra_medium</item>
-        <item name="android:textSize">@dimen/text_size_regular</item>
-    </style>
 </resources>

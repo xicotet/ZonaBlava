@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/custom_white">
 
-    <!-- NestedScrollingChild goes here (NestedScrollView, RecyclerView, etc.). -->
-    <androidx.core.widget.NestedScrollView
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/content_description_nested_scroll_view"
-        app:layout_behavior="@string/searchbar_scrolling_view_behavior">
-        <!-- Screen content goes here. -->
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="@dimen/search_bar_height"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_marginTop="46dp"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/md_theme_light_onBackground"
+        app:boxCornerRadiusBottomEnd="@dimen/filled_search_view_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/filled_search_view_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/filled_search_view_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/filled_search_view_corner_radius"
+        app:endIconMode="clear_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconContentDescription="Back"
+        app:startIconDrawable="@drawable/arrow_back">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.search.SearchBar
-            android:id="@+id/search_bar"
-            style="@style/CustomSearchBarStyle"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:contentDescription="@string/content_description_search_bar"
-            android:hint="@string/home_search_bar_title"
-            app:navigationIcon="@drawable/arrow_back"
-            app:useDrawerArrowDrawable="true" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:layout_height="match_parent"
+            app:helperText="@string/home_search_bar_title"
+            android:imeOptions="actionSearch"
+            android:fontFamily="@font/ezra_medium"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:inputType="text"
+            android:maxLines="1" />
 
-    <com.google.android.material.search.SearchView
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/searchPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_search_bar_title"
+        android:layout_marginTop="@dimen/margin_mini"
+        android:layout_marginStart="52dp"
+        android:textSize="@dimen/text_size_small"
+        android:fontFamily="@font/ezra_medium"
+        android:textColor="@color/md_theme_light_onBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/searchInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/searchInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/searchInputLayout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/suggestionsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:useDrawerArrowDrawable="true"
-        app:layout_anchor="@id/search_bar">
-        <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
-    </com.google.android.material.search.SearchView>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="@id/searchInputLayout"
+        app:layout_constraintStart_toStartOf="@id/searchInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/searchInputLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
