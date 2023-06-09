@@ -13,7 +13,9 @@ import com.canolabs.zonablava.databinding.ActivityMainBinding
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
 
     private lateinit var binding: ActivityMainBinding
@@ -64,5 +66,4 @@ class MainActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
             )
         }
     }
-
 }

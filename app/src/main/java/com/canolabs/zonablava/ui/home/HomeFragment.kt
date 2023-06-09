@@ -28,17 +28,23 @@ import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import android.provider.Settings
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.canolabs.zonablava.data.source.model.DefaultPlaces
 import com.canolabs.zonablava.helpers.Constants
+import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
+
+    private val searchViewModel: SearchViewModel by viewModels()
 
     // private var isFetchingUserLocation: Boolean = false
     private var _binding: FragmentHomeBinding? = null
@@ -241,6 +247,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+
+        //The onResume can be called when the user selects a suggested place in Search Fragment
+        Log.d("PassResults", "Enters onResume()")
+        Log.d("PassResults", "User selection Place ID: ${searchViewModel.userSelection.value.placeId}")
+        Log.d("PassResults", "Default places Valencia ID: ${DefaultPlaces.VALENCIA.placeId}")
+
+
+        if ((searchViewModel.userSelection.value.placeId != DefaultPlaces.VALENCIA.placeId)) {
+            Log.d("PassResults", "Animating camera")
+            googleMap?.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    searchViewModel.userSelection.value.location!!,
+                    16f
+                )
+            )
+            searchViewModel.setUserSelection(DefaultPlaces.VALENCIA)
+        }
     }
 
     override fun onPause() {

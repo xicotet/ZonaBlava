@@ -54,11 +54,12 @@
         app:layout_constraintTop_toTopOf="@+id/searchInputLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/suggestionsRecyclerView"
+        android:id="@+id/searchRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginVertical="@dimen/margin_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/searchInputLayout"
         app:layout_constraintStart_toStartOf="@id/searchInputLayout"
         app:layout_constraintTop_toBottomOf="@id/searchInputLayout" />
