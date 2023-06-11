@@ -7,7 +7,7 @@ object DefaultPlaces {
         "defaultCity1",
         "Benidorm",
         "Provincia de Alicante",
-        LatLng(38.5393832, -0.1666749)
+        LatLng(38.538743, -0.128376)
     )
 
     val VALENCIA = Place(
@@ -27,6 +27,6 @@ object DefaultPlaces {
         "defaultCity4",
         "La Vall d'Uixó",
         "Provincia de Castellón",
-        LatLng(39.8200671, -0.2553495)
+        LatLng(39.8209435,-0.2269505)
     )
 }

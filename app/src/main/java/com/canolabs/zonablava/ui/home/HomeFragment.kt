@@ -32,6 +32,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.data.source.model.DefaultPlaces
+import com.canolabs.zonablava.data.source.model.Place
 import com.canolabs.zonablava.helpers.Constants
 import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -230,6 +231,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                         Log.e("permission_granted", "onMapReady() | For some strange reason, marker value was null")
                     }
             }
+
+            Log.d("PassResults", "User selection Place ID: ${searchViewModel.userSelection.value.placeId}")
+            Log.d("PassResults", "Default places Valencia ID: ${DefaultPlaces.VALENCIA.placeId}")
+
+            // To provisionally switch to the userSelection. Above code should not be executed when coming from
+            // SearchFragment because the map should have persisted to the action of switching between fragments
+            // TODO("Find an approach to persist the map state so recreation don't need to be done")
+            if ((searchViewModel.userSelection.value.placeId != DefaultPlaces.VALENCIA.placeId)) {
+                Log.d("PassResults", "Animating camera")
+                googleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        searchViewModel.userSelection.value.location!!,
+                        15f
+                    )
+                )
+                searchViewModel.setUserSelection(DefaultPlaces.VALENCIA)
+            }
         }
     }
 
@@ -250,20 +268,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         //The onResume can be called when the user selects a suggested place in Search Fragment
         Log.d("PassResults", "Enters onResume()")
-        Log.d("PassResults", "User selection Place ID: ${searchViewModel.userSelection.value.placeId}")
-        Log.d("PassResults", "Default places Valencia ID: ${DefaultPlaces.VALENCIA.placeId}")
-
-
-        if ((searchViewModel.userSelection.value.placeId != DefaultPlaces.VALENCIA.placeId)) {
-            Log.d("PassResults", "Animating camera")
-            googleMap?.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    searchViewModel.userSelection.value.location!!,
-                    16f
-                )
-            )
-            searchViewModel.setUserSelection(DefaultPlaces.VALENCIA)
-        }
     }
 
     override fun onPause() {
@@ -281,6 +285,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         //To show normal Status Bar in other fragments
         activity?.window?.statusBarColor =
             ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
+        // TODO("Make the marker's last position persist")
+        searchViewModel.setUserSelection(Place("lastMarkerPosition", "none", "none", googleMap.cameraPosition.target))
         _binding = null
     }
 

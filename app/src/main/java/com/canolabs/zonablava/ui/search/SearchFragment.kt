@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canolabs.zonablava.BuildConfig
+import com.canolabs.zonablava.R
 import com.canolabs.zonablava.data.source.model.DefaultPlaces
 import com.canolabs.zonablava.data.source.model.Place
 import com.canolabs.zonablava.databinding.FragmentSearchBinding
@@ -117,7 +118,7 @@ class SearchFragment : Fragment() {
         adapter = SearchAdapter(defaultCities) { selectedSuggestion ->
             Log.d("PassResults", "Adapter detects user selection: ${selectedSuggestion.placeId}")
             searchViewModel.setUserSelection(selectedSuggestion)
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_navigation_search_to_navigation_home)
         }
 
         // Set up the RecyclerView with the necessary adapter and layout manager
