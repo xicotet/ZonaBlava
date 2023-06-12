@@ -4,6 +4,7 @@
     <string name="title_ticket">Tickets</string>
     <string name="title_vehicles">Vehículos</string>
     <string name="title_account">Cuenta</string>
+    <string name="title_search">Búsqueda</string>
 
     <!-- HomeFragment -->
     <string name="home_search_bar_title">¿Dónde quieres aparcar?</string>
@@ -23,4 +24,6 @@
     <string name="bottom_sheet_change_to_fine_location_allow">Cambiar a ubicación precisa</string>
     <string name="bottom_sheet_change_to_fine_location_carry_on">Seguir sin ella</string>
     <string name="bottom_sheet_change_to_fine_location_explanation">Nos gustaría utilizar tu ubicación precisa para posicionar exactamente tu lugar de aparcamiento</string>
+    <string name="content_description_search_bar">Esto es una barra de búsqueda</string>
+    <string name="content_description_nested_scroll_view">Esto es una vista donde se puede hacer scroll</string>
 </resources>

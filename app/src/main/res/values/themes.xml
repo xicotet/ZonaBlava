@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ZonaBlava" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.ZonaBlava" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -45,15 +45,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="itemIconSize">24dp</item>
-        <item name="itemFillColor">@color/md_theme_light_primary</item>
-        <item name="labelVisibilityMode">labeled</item>
-        <item name="menu">@menu/bottom_nav_menu</item>
-    </style>
 </resources>

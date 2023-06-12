@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/searchSuggestionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_mini"
+        android:layout_marginTop="@dimen/margin_regular"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="@dimen/text_size_large"
+        android:gravity="start|center"
+        tools:text="PLACEHOLDER"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/searchSuggestionDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_mini"
+        android:layout_marginVertical="@dimen/margin_tiny"
+        android:fontFamily="@font/roboto_light"
+        android:textSize="@dimen/text_size_small"
+        android:gravity="start|center"
+        tools:text="Description"
+        app:layout_constraintEnd_toEndOf="@+id/searchSuggestionTitle"
+        app:layout_constraintStart_toStartOf="@+id/searchSuggestionTitle"
+        app:layout_constraintTop_toBottomOf="@+id/searchSuggestionTitle" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="@dimen/margin_regular"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="@color/md_theme_light_onBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/searchSuggestionTitle"
+        app:layout_constraintEnd_toEndOf="@+id/searchSuggestionTitle"
+        app:layout_constraintTop_toBottomOf="@+id/searchSuggestionDescription" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,5 +57,6 @@
     <dimen name="active_indicator_corner_radius">16dp</dimen>
     <dimen name="active_indicator_width">64dp</dimen>
     <dimen name="active_indicator_height">32dp</dimen>
+    <dimen name="search_bar_height">64dp</dimen>
 
 </resources>
