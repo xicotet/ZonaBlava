@@ -26,4 +26,8 @@
     <string name="bottom_sheet_change_to_fine_location_explanation">Nos gustaría utilizar tu ubicación precisa para posicionar exactamente tu lugar de aparcamiento</string>
     <string name="content_description_search_bar">Esto es una barra de búsqueda</string>
     <string name="content_description_nested_scroll_view">Esto es una vista donde se puede hacer scroll</string>
+    
+    <string name="bottom_sheet_parking_type_title">Ticket</string>
+    <string name="bottom_sheet_parking_type_subtitle">Zona Azul</string>
+    <string name="bottom_sheet_parking_confirm_button">Confirmar</string>
 </resources>

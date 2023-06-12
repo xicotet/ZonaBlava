@@ -45,4 +45,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="CustomBottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="android:background">@drawable/background_bottom_sheet_park_vehicle</item>
+    </style>
 </resources>

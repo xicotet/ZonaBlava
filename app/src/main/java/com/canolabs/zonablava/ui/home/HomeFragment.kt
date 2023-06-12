@@ -1,38 +1,36 @@
 package com.canolabs.zonablava.ui.home
 
-import android.graphics.Color
-import android.os.Bundle
-import android.util.Log
-import android.view.*
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import android.view.*
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.R
+import com.canolabs.zonablava.data.source.model.Destination
+import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
+import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
+import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
-import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
-import android.provider.Settings
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.canolabs.zonablava.data.source.model.Destination
-import com.canolabs.zonablava.ui.search.SearchViewModel
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,6 +62,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private var markerParkCar: Marker? = null
     private val markerLastKnownUserLocation: MutableStateFlow<Marker?> = MutableStateFlow(null)
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     private var bottomSheetPermissionDialog: BottomSheetDialog? = null
     private var isBottomSheetPermissionDialogShowing: Boolean = false
@@ -174,6 +174,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         searchButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_search)
         }
+
+        setupParkVehicleBottomSheet(view);
+        setupParkVehicleDragHandle(view);
 
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
         systemRationaleAppearanceCount = 0
@@ -304,6 +307,40 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
                     requestLocationPermissions()
                 }
+            }
+        }
+    }
+
+    private fun setupParkVehicleBottomSheet(view: View) {
+        // Get a reference to the bottom sheet container
+        val bottomSheetContainer = view.findViewById<FrameLayout>(R.id.bottomSheetParkVehicleContainer)
+
+        // Initialize the BottomSheetBehavior
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        // Set the callback to listen for bottom sheet state changes
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // Handle state changes here if needed
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // Handle slide offset changes here if needed
+            }
+        })
+
+        // Set the initial state of the bottom sheet
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private fun setupParkVehicleDragHandle(view: View) {
+        // Set a click listener on the drag handle to toggle between expanded and collapsed states
+        val dragHandle = view.findViewById<View>(R.id.bottom_sheet_drag_handle)
+        dragHandle.setOnClickListener {
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
     }
