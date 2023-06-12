@@ -209,13 +209,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     .visible(false)
             )
 
-            // To position the marker to the last searches destination, in case there were any
+            var cameraZoom = 14f
+            // To position the marker to the last searched destination, in case there were any
             if (searchViewModel.userSelection.value.placeId != homeViewModel.getLastUserSearchDestination().placeId) {
                 markerParkCar!!.position = searchViewModel.userSelection.value.location!!
                 homeViewModel.setLastUserSearchSelection(searchViewModel.userSelection.value)
+                cameraZoom = 17f
             }
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, 13f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, cameraZoom))
             // Disable rotate gestures
             googleMap.uiSettings.isRotateGesturesEnabled = false
 
