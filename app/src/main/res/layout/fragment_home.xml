@@ -50,6 +50,7 @@
             style="@style/CustomBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:behavior_hideable="false"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <include
