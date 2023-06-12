@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -31,9 +30,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.canolabs.zonablava.data.source.model.DefaultPlaces
-import com.canolabs.zonablava.data.source.model.Place
-import com.canolabs.zonablava.helpers.Constants
+import com.canolabs.zonablava.data.source.model.Destination
 import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +43,7 @@ import kotlinx.coroutines.supervisorScope
 class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private val searchViewModel: SearchViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     // private var isFetchingUserLocation: Boolean = false
     private var _binding: FragmentHomeBinding? = null
@@ -146,8 +144,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
 
         // Make status bar transparent (in some devices) and so the map occupies more screen
         activity?.window?.apply {
@@ -192,25 +188,34 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.custom_map_style)
             googleMap.setMapStyle(mapStyleOptions)
 
-            val defaultLocation = LatLng(Constants.DEFAULT_LOCATION_LATITUDE, Constants.DEFAULT_LOCATION_LONGITUDE)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 13f))
-
+            Log.d("PassResults", "onMapReady. Last marker position: ${homeViewModel.getLastMarkerDestination().location}")
+            //Log.d("PassResults", "onMapReady. User selection Destination ID: ${searchViewModel.userSelection.value.placeId}")
             markerParkCar = googleMap.addMarker(
                 MarkerOptions()
-                    .position(defaultLocation)
+                    .position(homeViewModel.getLastMarkerDestination().location!!)
                     .title("Aparcar aquí")
                     .visible(true)
                     .zIndex(2.0f)
             )
 
+            Log.d("PassResults", "onMapReady. markerParkCar position is: ${markerParkCar?.position}")
+
             markerLastKnownUserLocation.value = googleMap.addMarker(
                 MarkerOptions()
-                    .position(defaultLocation).title("Mi ubicación")
+                    .position(homeViewModel.getLastMarkerDestination().location!!)
+                    .title("Mi ubicación")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_filled_bitmap))
                     .zIndex(1.0f)
                     .visible(false)
             )
 
+            // To position the marker to the last searches destination, in case there were any
+            if (searchViewModel.userSelection.value.placeId != homeViewModel.getLastUserSearchDestination().placeId) {
+                markerParkCar!!.position = searchViewModel.userSelection.value.location!!
+                homeViewModel.setLastUserSearchSelection(searchViewModel.userSelection.value)
+            }
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, 13f))
             // Disable rotate gestures
             googleMap.uiSettings.isRotateGesturesEnabled = false
 
@@ -232,22 +237,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     }
             }
 
-            Log.d("PassResults", "User selection Place ID: ${searchViewModel.userSelection.value.placeId}")
-            Log.d("PassResults", "Default places Valencia ID: ${DefaultPlaces.VALENCIA.placeId}")
-
-            // To provisionally switch to the userSelection. Above code should not be executed when coming from
-            // SearchFragment because the map should have persisted to the action of switching between fragments
             // TODO("Find an approach to persist the map state so recreation don't need to be done")
-            if ((searchViewModel.userSelection.value.placeId != DefaultPlaces.VALENCIA.placeId)) {
-                Log.d("PassResults", "Animating camera")
-                googleMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        searchViewModel.userSelection.value.location!!,
-                        15f
-                    )
-                )
-                searchViewModel.setUserSelection(DefaultPlaces.VALENCIA)
-            }
         }
     }
 
@@ -286,7 +276,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         activity?.window?.statusBarColor =
             ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary)
         // TODO("Make the marker's last position persist")
-        searchViewModel.setUserSelection(Place("lastMarkerPosition", "none", "none", googleMap.cameraPosition.target))
+        homeViewModel.setLastMarkerDestination(Destination("lastMarkerDestination", "none", "none", markerParkCar?.position))
         _binding = null
     }
 

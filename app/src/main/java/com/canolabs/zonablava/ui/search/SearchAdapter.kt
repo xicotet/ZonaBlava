@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.canolabs.zonablava.R
-import com.canolabs.zonablava.data.source.model.Place
+import com.canolabs.zonablava.data.source.model.Destination
 
-class SearchAdapter(private var suggestions: ArrayList<Place>,
-                    private val itemClickListener: (Place) -> Unit
+class SearchAdapter(private var suggestions: ArrayList<Destination>,
+                    private val itemClickListener: (Destination) -> Unit
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
@@ -25,7 +24,7 @@ class SearchAdapter(private var suggestions: ArrayList<Place>,
         holder.bind(searchItem)
     }
 
-    fun setSuggestions(newSuggestions: List<Place>) {
+    fun setSuggestions(newSuggestions: List<Destination>) {
         suggestions.clear()
         Log.d("search_fragment", "setSuggestion list given is: ${newSuggestions.size}")
         suggestions.addAll(newSuggestions)
@@ -50,9 +49,9 @@ class SearchAdapter(private var suggestions: ArrayList<Place>,
             }
         }
 
-        fun bind(place: Place) {
-            searchSuggestionTitle.text = place.name
-            searchSuggestionDescription.text = place.description
+        fun bind(destination: Destination) {
+            searchSuggestionTitle.text = destination.name
+            searchSuggestionDescription.text = destination.description
         }
     }
 }

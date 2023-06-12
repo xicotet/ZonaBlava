@@ -10,25 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.canolabs.zonablava.BuildConfig
 import com.canolabs.zonablava.R
-import com.canolabs.zonablava.data.source.model.DefaultPlaces
-import com.canolabs.zonablava.data.source.model.Place
+import com.canolabs.zonablava.data.source.model.DefaultDestinations
+import com.canolabs.zonablava.data.source.model.Destination
 import com.canolabs.zonablava.databinding.FragmentSearchBinding
+import com.canolabs.zonablava.ui.home.HomeViewModel
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private val searchViewModel: SearchViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!! // Only valid between onCreateView and onDestroyView
@@ -108,17 +112,32 @@ class SearchFragment : Fragment() {
     private fun setupSuggestionsRecyclerView() {
         val searchRecyclerView: RecyclerView = binding.searchRecyclerView
 
-        val defaultCities = arrayListOf<Place>(
-            DefaultPlaces.BETXI,
-            DefaultPlaces.LAVALL,
-            DefaultPlaces.VALENCIA,
-            DefaultPlaces.BENIDORM
+        val defaultCities = arrayListOf<Destination>(
+            DefaultDestinations.BETXI,
+            DefaultDestinations.LAVALL,
+            DefaultDestinations.VALENCIA,
+            DefaultDestinations.BENIDORM
         )
 
         adapter = SearchAdapter(defaultCities) { selectedSuggestion ->
             Log.d("PassResults", "Adapter detects user selection: ${selectedSuggestion.placeId}")
+            //This updates the userSelection and it can be also retrieved in HomeFragment
             searchViewModel.setUserSelection(selectedSuggestion)
-            findNavController().navigate(R.id.action_navigation_search_to_navigation_home)
+
+            var collectionJob: Job? = null
+            // userSelectionUpdating stateflow should be false before entering the Home Fragment
+            lifecycleScope.launch {
+                // Wait until the userSelectionUpdating state flow is false
+                collectionJob = launch {
+                    searchViewModel.userSelectionUpdating.collect { updating ->
+                        if (!updating) {
+                            Log.w("PassResults", "${findNavController()}")
+                            findNavController().navigate(R.id.action_navigation_search_to_navigation_home)
+                            collectionJob?.cancel()  // Cancel the collection job once navigation is performed
+                        }
+                    }
+                }
+            }
         }
 
         // Set up the RecyclerView with the necessary adapter and layout manager
