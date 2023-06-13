@@ -23,6 +23,7 @@ import com.canolabs.zonablava.data.source.model.Destination
 import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
+import com.canolabs.zonablava.databinding.BottomSheetParkVehicleBinding
 import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,6 +47,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     // private var isFetchingUserLocation: Boolean = false
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
+
+    private lateinit var _parkVehicleBinding: BottomSheetParkVehicleBinding
 
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
@@ -175,8 +178,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_search)
         }
 
-        setupParkVehicleBottomSheet(view);
-        setupParkVehicleDragHandle(view);
+        setupParkVehicleBottomSheet(view)
+        setupParkVehicleDragHandle(view)
 
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
         systemRationaleAppearanceCount = 0
@@ -236,6 +239,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // marker should not be null if and only if the addMarker() above can not return a null
                     if (markerParkCar != null) {
                         markerParkCar!!.position = updateMarkerPositionWithInterpolation(markerParkCar!!, fraction)
+                        homeViewModel.performReverseGeocoding(markerParkCar!!)
                     } else {
                         // If program arrives here, maybe there was a null value when initializing marker in line googleMap.addMarker()
                         Log.e("permission_granted", "onMapReady() | For some strange reason, marker value was null")
@@ -312,9 +316,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     }
 
     private fun setupParkVehicleBottomSheet(view: View) {
+        _parkVehicleBinding = BottomSheetParkVehicleBinding.bind(view)
+
         // Get a reference to the bottom sheet container
         val bottomSheetContainer = view.findViewById<FrameLayout>(R.id.bottomSheetParkVehicleContainer)
-
         // Initialize the BottomSheetBehavior
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -331,6 +336,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         // Set the initial state of the bottom sheet
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // Subscribe the TextView to the formattedAddress state flow
+        lifecycleScope.launch {
+            homeViewModel.formattedAddress.collect { address ->
+                _parkVehicleBinding.bottomSheetParkVehicleContent.text = address
+            }
+        }
     }
 
     private fun setupParkVehicleDragHandle(view: View) {
