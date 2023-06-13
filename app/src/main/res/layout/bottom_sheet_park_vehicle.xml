@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/padding_regular"
@@ -50,7 +51,8 @@
         android:layout_marginHorizontal="@dimen/margin_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_park_vehicle_subtitle"
-        app:srcCompat="@drawable/parking_symbol" />
+        app:srcCompat="@drawable/parking_symbol"
+        android:contentDescription="@string/content_description_bottom_sheet_parking_image"/>
 
     <TextView
         android:id="@+id/bottom_sheet_park_vehicle_content"
@@ -58,12 +60,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_regular"
-        android:text="@string/mock_street"
         android:textSize="@dimen/text_size_regular"
         app:layout_constraintBottom_toBottomOf="@+id/bottom_sheet_park_vehicle_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bottom_sheet_park_vehicle_image"
-        app:layout_constraintTop_toTopOf="@+id/bottom_sheet_park_vehicle_image" />
+        app:layout_constraintTop_toTopOf="@+id/bottom_sheet_park_vehicle_image"
+        tools:text="@string/mock_street"/>
 
     <Button
         android:id="@+id/bottom_sheet_park_vehicle_confirm_button"

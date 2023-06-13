@@ -14,7 +14,7 @@ object DefaultDestinations {
         "defaultCityValencia",
         "Valencia",
         "Provincia de Valencia",
-        LatLng(39.4079343, -0.5263206)
+        LatLng(39.467547, -0.367676)
     )
 
     val BETXI = Destination(

@@ -239,13 +239,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // marker should not be null if and only if the addMarker() above can not return a null
                     if (markerParkCar != null) {
                         markerParkCar!!.position = updateMarkerPositionWithInterpolation(markerParkCar!!, fraction)
-                        homeViewModel.performReverseGeocoding(markerParkCar!!)
+
+                        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                            homeViewModel.updateMarkerPosition(markerParkCar!!.position)
+                        }
                     } else {
                         // If program arrives here, maybe there was a null value when initializing marker in line googleMap.addMarker()
                         Log.e("permission_granted", "onMapReady() | For some strange reason, marker value was null")
                     }
             }
-
             // TODO("Find an approach to persist the map state so recreation don't need to be done")
         }
     }
@@ -326,7 +328,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         // Set the callback to listen for bottom sheet state changes
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // Handle state changes here if needed
+                if (newState == BottomSheetBehavior.STATE_EXPANDED){
+                    homeViewModel.updateMarkerPosition(markerParkCar!!.position)
+                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
