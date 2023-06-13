@@ -28,7 +28,7 @@ class SearchAdapter(private var suggestions: ArrayList<Destination>,
         suggestions.clear()
         Log.d("search_fragment", "setSuggestion list given is: ${newSuggestions.size}")
         suggestions.addAll(newSuggestions)
-        notifyItemRangeChanged(0, suggestions.size)
+        notifyDataSetChanged() //To provisionally avoid Invalid view holder adapter positionSearchViewHolder
     }
 
     override fun getItemCount(): Int {

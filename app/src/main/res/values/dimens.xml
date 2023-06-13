@@ -25,9 +25,6 @@
     <dimen name="text_size_tiny">10sp</dimen>
     <dimen name="text_size_mini">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
-
-    <!-- Establish it in corresponding style-->
-    <!-- text_size_medium = 14sp by default  -->
     <dimen name="text_size_regular">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_extra_large">20sp</dimen>
@@ -40,9 +37,8 @@
     <dimen name="radius_regular">16dp</dimen>
     <dimen name="radius_large">20dp</dimen>
     <dimen name="radius_extra_large">24dp</dimen>
-
-    <!-- This could be deleted if is in LocSe -->
-    <dimen name="filled_search_view_corner_radius">72dp</dimen>
+    <dimen name="radius_bottom_sheet_park_vehicle">36dp</dimen>
+    <dimen name="radius_filled_search_view_corner">72dp</dimen>
 
     <!-- MISCELLANY -->
     <dimen name="size_zero">0dp</dimen>
@@ -52,6 +48,7 @@
 
     <!-- ELEVATION -->
     <dimen name="elevation_profile_card">12dp</dimen>
+    <dimen name="elevation_home_image_button">6dp</dimen>
 
     <!-- Navigation bar active indicator dimensions -->
     <dimen name="active_indicator_corner_radius">16dp</dimen>

@@ -1,38 +1,37 @@
 package com.canolabs.zonablava.ui.home
 
-import android.graphics.Color
-import android.os.Bundle
-import android.util.Log
-import android.view.*
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
+import android.view.*
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.R
+import com.canolabs.zonablava.data.source.model.Destination
+import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
+import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
+import com.canolabs.zonablava.databinding.BottomSheetParkVehicleBinding
+import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
-import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
-import android.provider.Settings
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.canolabs.zonablava.data.source.model.Destination
-import com.canolabs.zonablava.ui.search.SearchViewModel
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +48,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
 
+    private lateinit var _parkVehicleBinding: BottomSheetParkVehicleBinding
+
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
 
@@ -64,6 +65,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private var markerParkCar: Marker? = null
     private val markerLastKnownUserLocation: MutableStateFlow<Marker?> = MutableStateFlow(null)
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     private var bottomSheetPermissionDialog: BottomSheetDialog? = null
     private var isBottomSheetPermissionDialogShowing: Boolean = false
@@ -175,6 +178,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_search)
         }
 
+        setupParkVehicleBottomSheet(view)
+        setupParkVehicleDragHandle(view)
+
         Log.d("permission_granted", "onViewCreated | rationaleAppearanceCount: $systemRationaleAppearanceCount")
         systemRationaleAppearanceCount = 0
     }
@@ -209,13 +215,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     .visible(false)
             )
 
-            // To position the marker to the last searches destination, in case there were any
+            var cameraZoom = 14f
+            // To position the marker to the last searched destination, in case there were any
             if (searchViewModel.userSelection.value.placeId != homeViewModel.getLastUserSearchDestination().placeId) {
                 markerParkCar!!.position = searchViewModel.userSelection.value.location!!
                 homeViewModel.setLastUserSearchSelection(searchViewModel.userSelection.value)
+                cameraZoom = 17f
             }
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, 13f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, cameraZoom))
             // Disable rotate gestures
             googleMap.uiSettings.isRotateGesturesEnabled = false
 
@@ -231,12 +239,15 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     // marker should not be null if and only if the addMarker() above can not return a null
                     if (markerParkCar != null) {
                         markerParkCar!!.position = updateMarkerPositionWithInterpolation(markerParkCar!!, fraction)
+
+                        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                            homeViewModel.updateMarkerPosition(markerParkCar!!.position)
+                        }
                     } else {
                         // If program arrives here, maybe there was a null value when initializing marker in line googleMap.addMarker()
                         Log.e("permission_granted", "onMapReady() | For some strange reason, marker value was null")
                     }
             }
-
             // TODO("Find an approach to persist the map state so recreation don't need to be done")
         }
     }
@@ -302,6 +313,50 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
                     requestLocationPermissions()
                 }
+            }
+        }
+    }
+
+    private fun setupParkVehicleBottomSheet(view: View) {
+        _parkVehicleBinding = BottomSheetParkVehicleBinding.bind(view)
+
+        // Get a reference to the bottom sheet container
+        val bottomSheetContainer = view.findViewById<FrameLayout>(R.id.bottomSheetParkVehicleContainer)
+        // Initialize the BottomSheetBehavior
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        // Set the callback to listen for bottom sheet state changes
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED){
+                    homeViewModel.updateMarkerPosition(markerParkCar!!.position)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // Handle slide offset changes here if needed
+            }
+        })
+
+        // Set the initial state of the bottom sheet
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // Subscribe the TextView to the formattedAddress state flow
+        lifecycleScope.launch {
+            homeViewModel.formattedAddress.collect { address ->
+                _parkVehicleBinding.bottomSheetParkVehicleContent.text = address
+            }
+        }
+    }
+
+    private fun setupParkVehicleDragHandle(view: View) {
+        // Set a click listener on the drag handle to toggle between expanded and collapsed states
+        val dragHandle = view.findViewById<View>(R.id.bottom_sheet_drag_handle)
+        dragHandle.setOnClickListener {
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
     }
