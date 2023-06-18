@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <View
+        android:id="@+id/bottom_sheet_map_settings_drag_handle"
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/md_theme_light_onBackground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/bottom_sheet_map_settings_toggle_container"
         android:layout_width="match_parent"
@@ -11,9 +22,13 @@
         android:layout_marginHorizontal="@dimen/margin_medium"
         android:layout_marginVertical="@dimen/margin_medium"
         android:gravity="center"
+        app:selectionRequired="true"
+        app:checkedButton="@+id/bottom_sheet_map_settings_watch_toggle"
+        app:singleSelection="true"
         app:layout_constraintBottom_toTopOf="@+id/bottom_sheet_map_settings_switch_section_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_map_settings_drag_handle">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/bottom_sheet_map_settings_park_toggle"
@@ -21,9 +36,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:fontFamily="@font/ezra_medium"
             android:text="@string/settings_bottom_sheet_park_toggle_button"
-            android:textSize="@dimen/text_size_extra_large"
+            android:textSize="@dimen/text_size_large"
             app:icon="@drawable/pin_drop_symbol"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
@@ -36,9 +50,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:fontFamily="@font/ezra_medium"
             android:text="@string/settings_bottom_sheet_just_watch_toogle_button"
-            android:textSize="@dimen/text_size_extra_large"
+            android:textSize="@dimen/text_size_large"
             app:icon="@drawable/eye_symbol"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
@@ -119,6 +132,5 @@
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="@dimen/text_size_regular"
             android:text="@string/settings_bottom_sheet_parking_switch"/>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
