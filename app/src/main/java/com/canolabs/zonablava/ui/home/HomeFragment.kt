@@ -24,6 +24,7 @@ import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
 import com.canolabs.zonablava.databinding.BottomSheetParkVehicleBinding
+import com.canolabs.zonablava.databinding.BottomSheetMapSettingsBinding
 import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -73,6 +74,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private var bottomSheetChangeToFineLocationDialog: BottomSheetDialog? = null
     private var isBottomSheetChangeToFineLocationDialogShowing: Boolean = false
+
+    private var bottomSheetMapSettingsDialog: BottomSheetDialog? = null
 
     private var systemRationaleAppearanceCount: Int = 0
 
@@ -172,6 +175,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         binding.myLocationButton.setImageResource(R.drawable.my_location_unknown)
         binding.myLocationButton.setOnClickListener(this)
+
+        binding.homeSettingsButton.setOnClickListener(this)
 
         val searchButton = binding.searchButton
         searchButton.setOnClickListener {
@@ -314,7 +319,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     requestLocationPermissions()
                 }
             }
+
+            R.id.homeSettingsButton -> {
+                showMapSettingsBottomSheet()
+            }
         }
+    }
+
+    private fun showMapSettingsBottomSheet() {
+        val binding = BottomSheetMapSettingsBinding.inflate(layoutInflater)
+        bottomSheetMapSettingsDialog = BottomSheetDialog(requireContext()) //TODO Check requireContext() is never null
+        bottomSheetMapSettingsDialog!!.setContentView(binding.root)
+
+        bottomSheetMapSettingsDialog!!.show()
     }
 
     private fun setupParkVehicleBottomSheet(view: View) {
