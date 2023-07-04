@@ -38,7 +38,7 @@
     <string name="settings_bottom_sheet_switch_section_title">Tipos de estacionamiento</string>
     <string name="settings_bottom_sheet_all_zones_switch">Todos</string>
     <string name="settings_bottom_sheet_blue_zone_switch">Zona Azul</string>
-    <string name="settings_bottom_sheet_orange_zone_switch">Zona Naranja</string>
+    <string name="settings_bottom_sheet_orange_and_green_zone_switch">Zona Naranja / Zona Verde</string>
     <string name="settings_bottom_sheet_parking_switch">Parkings</string>
 
     <!-- Content descriptions -->

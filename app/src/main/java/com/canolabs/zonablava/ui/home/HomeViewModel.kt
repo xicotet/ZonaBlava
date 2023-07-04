@@ -29,6 +29,9 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     // Eventually, this flow should substitute the markerParkCar of HomeFragment
     private val markerPositionFlow = MutableStateFlow<LatLng?>(null)
 
+    private val _mapSettingsState = MutableStateFlow(MapSettingsUIState())
+    val mapSettingsState: StateFlow<MapSettingsUIState> = _mapSettingsState
+
     init {
         viewModelScope.launch {
             markerPositionFlow
@@ -38,6 +41,10 @@ class HomeViewModel @Inject constructor(): ViewModel() {
                     performReverseGeocoding(markerPosition)
                 }
         }
+    }
+
+    fun updateMapSettingsState(state: MapSettingsUIState) {
+        _mapSettingsState.value = state
     }
 
     fun setLastMarkerDestination(destination: Destination) {
@@ -76,3 +83,12 @@ class HomeViewModel @Inject constructor(): ViewModel() {
         }
     }
 }
+
+data class MapSettingsUIState(
+    val isWatchToggleChecked: Boolean = false,
+    val isParkToggleChecked: Boolean = true,
+    val isAllZonesSwitchChecked: Boolean = false,
+    val isBlueZoneSwitchChecked: Boolean = true,
+    val isOrangeAndGreenZoneSwitchChecked: Boolean = true,
+    val isParkingSwitchChecked: Boolean = false
+)

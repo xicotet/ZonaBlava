@@ -91,7 +91,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_mini"
             android:paddingEnd="@dimen/padding_small"
-            android:checked="false"
             android:textAlignment="viewEnd"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="@dimen/text_size_regular"
@@ -103,14 +102,13 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_mini"
             android:paddingEnd="@dimen/padding_small"
-            android:checked="true"
             android:textAlignment="viewEnd"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="@dimen/text_size_regular"
             android:text="@string/settings_bottom_sheet_blue_zone_switch"/>
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/bottom_sheet_map_settings_orange_zone_switch"
+            android:id="@+id/bottom_sheet_map_settings_orange_and_green_zone_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_mini"
@@ -119,7 +117,7 @@
             android:textAlignment="viewEnd"
             android:textColor="@color/md_theme_light_onPrimaryContainer"
             android:textSize="@dimen/text_size_regular"
-            android:text="@string/settings_bottom_sheet_orange_zone_switch"/>
+            android:text="@string/settings_bottom_sheet_orange_and_green_zone_switch"/>
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/bottom_sheet_map_settings_parking_switch"

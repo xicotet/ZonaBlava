@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.R
+import com.canolabs.zonablava.data.source.model.DefaultParkingZonesLaVall
 import com.canolabs.zonablava.data.source.model.Destination
 import com.canolabs.zonablava.databinding.BottomSheetChangeToFineLocationBinding
 import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
@@ -36,6 +37,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
@@ -178,6 +181,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         binding.homeSettingsButton.setOnClickListener(this)
 
+        binding.bottomSheetParkVehicleContainer
         val searchButton = binding.searchButton
         searchButton.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_navigation_search)
@@ -228,6 +232,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 cameraZoom = 17f
             }
 
+            setUpLaVallParkingZones()
+
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerParkCar!!.position, cameraZoom))
             // Disable rotate gestures
             googleMap.uiSettings.isRotateGesturesEnabled = false
@@ -255,6 +261,11 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
             }
             // TODO("Find an approach to persist the map state so recreation don't need to be done")
         }
+    }
+
+    private fun setUpLaVallParkingZones() {
+        googleMap.addPolygon(DefaultParkingZonesLaVall.blueZoneBenigaslo)
+        googleMap.addPolygon(DefaultParkingZonesLaVall.orangeZoneCarbonaire)
     }
 
     private fun updateMarkerPositionWithInterpolation(marker: Marker, fraction: Float): LatLng {
@@ -331,6 +342,47 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
         bottomSheetMapSettingsDialog = BottomSheetDialog(requireContext()) //TODO Check requireContext() is never null
         bottomSheetMapSettingsDialog!!.setContentView(binding.root)
 
+        // Observe the map settings state and update the UI accordingly
+        homeViewModel.mapSettingsState.onEach { state ->
+            binding.bottomSheetMapSettingsToggleContainer.check(
+                if (state.isWatchToggleChecked) R.id.bottom_sheet_map_settings_watch_toggle
+                else R.id.bottom_sheet_map_settings_park_toggle
+            )
+
+            // Custom logic for the map based on the toggle state
+            if (state.isWatchToggleChecked) {
+                markerParkCar!!.isVisible = false
+                bottomSheetBehavior.isHideable = true
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else if (state.isParkToggleChecked) {
+                markerParkCar!!.isVisible = true
+                bottomSheetBehavior.isHideable = false
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            binding.bottomSheetMapSettingsAllZonesSwitch.isChecked = state.isAllZonesSwitchChecked
+            binding.bottomSheetMapSettingsBlueZoneSwitch.isChecked = state.isBlueZoneSwitchChecked
+            binding.bottomSheetMapSettingsOrangeAndGreenZoneSwitch.isChecked =
+                state.isOrangeAndGreenZoneSwitchChecked
+            binding.bottomSheetMapSettingsParkingSwitch.isChecked = state.isParkingSwitchChecked
+        }.launchIn(lifecycleScope) // Launches the collection of the flow in the given lifecycle scope
+
+        binding.bottomSheetMapSettingsToggleContainer.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                val currentState = homeViewModel.mapSettingsState.value // Get the current MapSettingsUIState
+                val newState = when (checkedId) {
+                    R.id.bottom_sheet_map_settings_watch_toggle -> {
+                        currentState.copy(isWatchToggleChecked = true)
+                    }
+                    R.id.bottom_sheet_map_settings_park_toggle -> {
+                        currentState.copy(isWatchToggleChecked = false)
+                    }
+                    else -> currentState.copy() // No change in state
+                }
+
+                homeViewModel.updateMapSettingsState(newState) // Update the UIState
+            }
+        }
         bottomSheetMapSettingsDialog!!.show()
     }
 
