@@ -1,6 +1,6 @@
 # ZonaBlava
 
-Get your parking ticket effortlessly :parking:
+Get your parking ticket effortlessly :parking: :ticket:
 
 ![ZonaBlava_Fondo_Negro](https://github.com/xicotet/ZonaBlava/assets/95344529/4074ce71-ec6e-438f-b5b0-3fb0044ce5bd)
 [![forthebadge](https://forthebadge.com/images/badges/built-for-android.svg)](https://forthebadge.com)
@@ -14,15 +14,11 @@ ZonaBlava is a cutting-edge Android application developed to revolutionize the w
 Under construction 🚧
 
 ## Screenshots
-<table>
-  <tr>
-    <td><img src="./Media/final-home.png" width="50%" height="65%" style="border: none;" /></td>
-    <td><img src="./Media/search.jpg" width="50%" height="65%" style="border: none;" /></td>
-    <td><img src="./Media/location.png" width="50%" height="65%" style="border: none;" /></td>
-  </tr>
-</table>
+| ![Final Home](./Media/final-home.png) | ![Search](./Media/search.jpg) |
+|:------------------------------------:|:-----------------------------:|
+| Home Screen                           | Search Screen                   |
 
 
 
 
-<!-- This is a comment in Markdown -->
+<!-- Description, Getting Started -->
