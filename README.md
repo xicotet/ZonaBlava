@@ -11,10 +11,13 @@ Get your parking ticket effortlessly :parking:
 **ZonaBlava** is a cutting-edge Android application developed to revolutionize the way regulated parking is managed. With ZonaBlava, users can effortlessly obtain virtual parking tickets directly from their mobile devices, eliminating the hassle of searching for physical parking meters. Our app offers a seamless and convenient solution for a smoother parking experience. Say goodbye to the traditional complexities of parking management and embrace the simplicity and efficiency of ZonaBlava.
 
 ## Screenshots
-<div>
-    <img src="./Media/final-home.png" alt="Home Screenshot" width="50%">
-    <img src="./Media/search.jpg" alt="Search Screenshot" width="50%">
-</div>
+<table>
+  <tr>
+    <td><img src="./Media/final-home.png" width="50%" height="35%" style="border: none;" /></td>
+    <td><img src="./Media/search.jpg" width="50%" height="35%" style="border: none;" /></td>
+  </tr>
+</table>
+
 ## Curent app state
 Under construction 🚧
 
