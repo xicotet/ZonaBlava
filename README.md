@@ -16,9 +16,9 @@ Under construction 🚧
 ## Screenshots
 <table>
   <tr>
-    <td><img src="./Media/final-home.png" width="50%" height="45%" style="border: none;" /></td>
-    <td><img src="./Media/search.jpg" width="50%" height="45%" style="border: none;" /></td>
-    <td><img src="./Media/fine-location.png" width="50%" height="45%" style="border: none;" /></td>
+    <td><img src="./Media/final-home.png" width="50%" height="65%" style="border: none;" /></td>
+    <td><img src="./Media/search.jpg" width="50%" height="65%" style="border: none;" /></td>
+    <td><img src="./Media/location.png" width="50%" height="65%" style="border: none;" /></td>
   </tr>
 </table>
 
