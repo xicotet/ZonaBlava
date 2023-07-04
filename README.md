@@ -12,7 +12,7 @@ Get your parking ticket effortlessly
 
 ## Screenshots
 ![Home ScreenShoot of ZonaBlava App](./Media/final-home.png)
-
+<img src="./Media/final-home.png" style="height: 50%; width:50%;"/>
 ## Curent app state
 Under construction 🚧
 
