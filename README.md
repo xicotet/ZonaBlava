@@ -25,7 +25,7 @@ Under construction 🚧
 |:------------------------------------:|:-----------------------------:|
 | Home Screen                           | Search Screen                   |
 
-| ![Final Home](./Media/bottom-sheet-expanded.png) | ![Search](./Media/bottom-sheet-expanded.png) |
+| ![Final Home](./Media/bottom-sheet-collapsed.png) | ![Search](./Media/bottom-sheet-expanded.png) |
 |:------------------------------------:|:-----------------------------:|
 | Park Car Bottom Sheet Collapsed                           | Park Car Bottom Sheet Expanded                   |
 
@@ -34,4 +34,4 @@ Under construction 🚧
 | Location permission rationale                           | Change to fine location rationale                  |
 
 
-<!-- Description, Getting Started -->
+<!-- Features, Getting Started, Version History (v1.0 -->
