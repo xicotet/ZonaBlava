@@ -8,7 +8,7 @@
 
 ## Introduction
 
-This project is the result of my thesis work during my higher education studies, specifically the Higher Professional Training Program of 2 years. The project's initial phase, including the thesis documentation, was completed and submitted in June 2023. However, the development of the application has continued beyond the scope of the thesis, with ongoing enhancements and updates. Feel free to check out the [PDF of the thesis](https://drive.google.com/file/d/1rUUOyTHoGvRlYACSCU2s2tGlRVlB27Eh/view?usp=sharing) (written in Spanish). 
+This project is the result of my thesis work during my higher education studies, specifically the Higher Education in Multiplatform App Development. The project's initial phase, including the thesis documentation, was completed and submitted in June 2023. However, the development of the application has continued beyond the scope of the thesis, with ongoing enhancements and updates. Feel free to check out the [PDF of the thesis](https://drive.google.com/file/d/1rUUOyTHoGvRlYACSCU2s2tGlRVlB27Eh/view?usp=sharing) (written in Spanish). 
 
 
 ## About
