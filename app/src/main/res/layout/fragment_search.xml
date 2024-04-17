@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_bar_height"
         android:layout_marginHorizontal="@dimen/margin_medium"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="56dp"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/md_theme_light_onBackground"
         app:boxCornerRadiusBottomEnd="@dimen/radius_filled_search_view_corner"
