@@ -59,6 +59,10 @@ class SearchFragment : Fragment() {
         setupSearchTextInput()
         setupSuggestionsRecyclerView()
 
+        binding.searchInputLayout.setStartIconOnClickListener {
+            findNavController().navigate(R.id.action_navigation_search_to_navigation_home)
+        }
+
         return root
     }
 
