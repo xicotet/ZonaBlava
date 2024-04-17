@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'com.canolabs.zonablava'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.canolabs.zonablava"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -35,6 +35,15 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.11'
+    }
+    kotlin {
+        jvmToolchain {
+            languageVersion = JavaLanguageVersion.of(8)
+        }
     }
 }
 
@@ -50,8 +59,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Dagger Hilt dependencies
-    implementation 'com.google.dagger:hilt-android:2.44'
-    kapt 'com.google.dagger:hilt-android-compiler:2.44'
+    implementation 'com.google.dagger:hilt-android:2.48'
+    kapt 'com.google.dagger:hilt-android-compiler:2.48'
 
     // For navigation components (switch easily between fragments)
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
@@ -59,7 +68,16 @@ dependencies {
 
     // Splash Screen latest native API
     implementation "androidx.core:core-splashscreen:1.0.0"
-    
+
+    // Compose
+    implementation platform('androidx.compose:compose-bom:2024.04.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.runtime:runtime'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
