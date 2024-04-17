@@ -40,6 +40,7 @@ import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
 import com.canolabs.zonablava.databinding.BottomSheetParkVehicleBinding
 import com.canolabs.zonablava.databinding.BottomSheetMapSettingsBinding
+import com.canolabs.zonablava.helpers.ImagesUtils
 import com.canolabs.zonablava.ui.common.Shimmer
 import com.canolabs.zonablava.ui.robotoFamily
 import com.canolabs.zonablava.ui.search.SearchViewModel
@@ -226,6 +227,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                 MarkerOptions()
                     .position(homeViewModel.getLastMarkerDestination().location!!)
                     .title("Aparcar aquí")
+                    .icon(ImagesUtils.bitmapDescriptorFromVector(requireContext(), R.drawable.marker_park_car))
                     .visible(true)
                     .zIndex(2.0f)
             )
