@@ -243,6 +243,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
                     .visible(false)
             )
 
+            val normalIcon = ImagesUtils.bitmapDescriptorFromVector(requireContext(), R.drawable.marker_park_car)
+            val elevatedIcon = ImagesUtils.bitmapDescriptorFromVector(requireContext(), R.drawable.marker_park_car_elevated)
+
+            googleMap.setOnCameraMoveStartedListener { reason ->
+                Log.d("CameraMove", "Camera move started")
+                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    // The user started to move the map, so elevate the marker
+                    // Elevate the the marker
+                    markerParkCar?.setIcon(elevatedIcon)
+                }
+            }
+
+            googleMap.setOnCameraIdleListener {
+                Log.d("CameraMove", "Camera move stopped")
+                // The user stopped moving the map, so lower the marker
+                markerParkCar?.setIcon(normalIcon)
+            }
+
             var cameraZoom = 14f
             // To position the marker to the last searched destination, in case there were any
             if (searchViewModel.userSelection.value.placeId != homeViewModel.getLastUserSearchDestination().placeId) {
