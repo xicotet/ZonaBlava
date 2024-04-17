@@ -54,8 +54,8 @@
         app:srcCompat="@drawable/parking_symbol"
         android:contentDescription="@string/content_description_bottom_sheet_parking_image"/>
 
-    <TextView
-        android:id="@+id/bottom_sheet_park_vehicle_content"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"

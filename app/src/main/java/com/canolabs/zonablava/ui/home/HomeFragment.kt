@@ -13,6 +13,20 @@ import android.view.*
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,6 +40,8 @@ import com.canolabs.zonablava.databinding.BottomSheetLocationPermissionBinding
 import com.canolabs.zonablava.databinding.FragmentHomeBinding
 import com.canolabs.zonablava.databinding.BottomSheetParkVehicleBinding
 import com.canolabs.zonablava.databinding.BottomSheetMapSettingsBinding
+import com.canolabs.zonablava.ui.common.Shimmer
+import com.canolabs.zonablava.ui.robotoFamily
 import com.canolabs.zonablava.ui.search.SearchViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -53,6 +69,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
     private val binding get() = _binding!! // This property is only valid between onCreateView and onDestroyView.
 
     private lateinit var _parkVehicleBinding: BottomSheetParkVehicleBinding
+    private lateinit var composeView: ComposeView
 
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
@@ -388,7 +405,29 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
     private fun setupParkVehicleBottomSheet(view: View) {
         _parkVehicleBinding = BottomSheetParkVehicleBinding.bind(view)
-
+        composeView = _parkVehicleBinding.composeView
+        composeView.setContent {
+            val address by homeViewModel.formattedAddress.collectAsState()
+            if (address.isBlank()) {
+                Shimmer { brush ->
+                    Box(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .fillMaxWidth(0.5f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(brush = brush)
+                    )
+                }
+            } else {
+                // Display the address
+                Text(
+                    text = address,
+                    fontFamily = robotoFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp
+                )
+            }
+        }
         // Get a reference to the bottom sheet container
         val bottomSheetContainer = view.findViewById<FrameLayout>(R.id.bottomSheetParkVehicleContainer)
         // Initialize the BottomSheetBehavior
@@ -409,13 +448,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback, View.OnClickListener {
 
         // Set the initial state of the bottom sheet
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        // Subscribe the TextView to the formattedAddress state flow
-        lifecycleScope.launch {
-            homeViewModel.formattedAddress.collect { address ->
-                _parkVehicleBinding.bottomSheetParkVehicleContent.text = address
-            }
-        }
     }
 
     private fun setupParkVehicleDragHandle(view: View) {
