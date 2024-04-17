@@ -2,6 +2,7 @@ package com.canolabs.zonablava.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -36,6 +37,16 @@ class MainActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
+
+        // Hide navigation bar when navigating to search fragment
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.navigation_search) {
+                binding.navBar.visibility = View.GONE
+            } else {
+
+                binding.navBar.visibility = View.VISIBLE
+            }
+        }
 
         // To prevent error using play-services-maps alongside with MapView
         MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
