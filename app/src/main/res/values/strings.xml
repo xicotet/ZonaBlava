@@ -9,6 +9,9 @@
     <!-- HomeFragment -->
     <string name="home_search_bar_title">¿Dónde quieres aparcar?</string>
 
+    <!-- Vehicles Fragment -->
+    <string name="vehicles_add_vehicle_button">Añadir vehículo</string>
+
     <!-- Bottom sheet location permission -->
     <string name="bottom_sheet_permission_allow">Activar permiso</string>
     <string name="bottom_sheet_permission_maybe_later">Quizás más tarde</string>
