@@ -1,13 +1,21 @@
 package com.canolabs.zonablava.ui.vehicles
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.canolabs.zonablava.data.source.model.Vehicle
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class VehiclesViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is vehicles Fragment"
+    private var _state = MutableStateFlow(VehiclesUIState())
+    val state: StateFlow<VehiclesUIState> = _state.asStateFlow()
+
+    val vehicle1 = Vehicle("1234ABC", "Ford", "Focus", "DailyCar", "Green")
+    val vehicles = listOf(vehicle1)
+
+    init {
+        _state.setVehicles(vehicles)
     }
-    val text: LiveData<String> = _text
+
 }
