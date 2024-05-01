@@ -25,7 +25,11 @@
         android:id="@+id/navigation_vehicles"
         android:name="com.canolabs.zonablava.ui.vehicles.VehiclesFragment"
         android:label="@string/title_vehicles"
-        tools:layout="@layout/fragment_vehicles" />
+        tools:layout="@layout/fragment_vehicles" >
+        <action
+            android:id="@+id/action_navigation_vehicles_to_navigation_add_vehicle"
+            app:destination="@id/navigation_add_vehicle" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_account"
@@ -41,5 +45,15 @@
         <action
             android:id="@+id/action_navigation_search_to_navigation_home"
             app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_vehicle"
+        android:name="com.canolabs.zonablava.ui.vehicles.addVehicle.AddVehicleFragment"
+        android:label="@string/title_add_vehicle"
+        tools:layout="@layout/fragment_add_vehicle" >
+        <action
+            android:id="@+id/action_navigation_add_vehicle_to_navigation_vehicles"
+            app:destination="@id/navigation_vehicles" />
     </fragment>
 </navigation>

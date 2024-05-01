@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.canolabs.zonablava.R
 import com.canolabs.zonablava.databinding.FragmentVehiclesBinding
 import com.canolabs.zonablava.ui.ezraFamily
@@ -42,8 +43,7 @@ class VehiclesFragment : Fragment() {
 
     private var _binding: FragmentVehiclesBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -78,7 +78,9 @@ class VehiclesFragment : Fragment() {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 ElevatedButton(
-                    onClick = { /* Handle button click here */ },
+                    onClick = {
+                        findNavController().navigate(R.id.action_navigation_vehicles_to_navigation_add_vehicle)
+                    },
                     modifier = Modifier
                         .height(48.dp)
                         .align(Alignment.CenterHorizontally),

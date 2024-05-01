@@ -38,13 +38,16 @@ class MainActivity : AppCompatActivity(), OnMapsSdkInitializedCallback {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Hide navigation bar when navigating to search fragment
+        // Hide navigation bar when navigating to for example search fragment
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if(destination.id == R.id.navigation_search) {
-                binding.navBar.visibility = View.GONE
-            } else {
-
-                binding.navBar.visibility = View.VISIBLE
+            when (destination.id) {
+                R.id.navigation_search,
+                R.id.navigation_add_vehicle -> {
+                    binding.navBar.visibility = View.GONE
+                }
+                else -> {
+                    binding.navBar.visibility = View.VISIBLE
+                }
             }
         }
 

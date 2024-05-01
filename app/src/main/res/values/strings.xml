@@ -5,6 +5,7 @@
     <string name="title_vehicles">Vehículos</string>
     <string name="title_account">Cuenta</string>
     <string name="title_search">Búsqueda</string>
+    <string name="title_add_vehicle">Añadir vehículo</string>
 
     <!-- HomeFragment -->
     <string name="home_search_bar_title">¿Dónde quieres aparcar?</string>
