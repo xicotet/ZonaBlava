@@ -12,6 +12,14 @@
 
     <!-- Vehicles Fragment -->
     <string name="vehicles_add_vehicle_button">Añadir vehículo</string>
+    <string name="vehicles_edit_vehicle">Editar vehículo</string>
+    <string name="vehicles_license_plate_placeholder">Matrícula</string>
+    <string name="vehicles_license_plate_error">La matrícula debe tener 4 números seguidos de 3 consonantes</string>
+    <string name="vehicles_vehicle_brand">Marca</string>
+    <string name="vehicles_vehicle_model">Modelo</string>
+    <string name="vehicles_vehicle_alias">Alias (opcional)</string>
+    <string name="vehicles_delete_vehicle">Eliminar</string>
+    <string name="vehicles_save_vehicle">Guardar</string>
 
     <!-- Bottom sheet location permission -->
     <string name="bottom_sheet_permission_allow">Activar permiso</string>

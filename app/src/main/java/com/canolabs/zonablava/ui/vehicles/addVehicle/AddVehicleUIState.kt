@@ -9,6 +9,7 @@ data class AddVehicleUIState(
     val model: String = "",
     val alias: String = "",
     val type: String = "",
+    val licensePlateErrorId: Int? = null,
     override val isLoading: Boolean = false,
     override val loadingMessageId: Int? = null,
 ) : UIState
@@ -31,4 +32,8 @@ fun MutableStateFlow<AddVehicleUIState>.setAlias(alias: String) {
 
 fun MutableStateFlow<AddVehicleUIState>.setType(type: String) {
     value = value.copy(type = type)
+}
+
+fun MutableStateFlow<AddVehicleUIState>.setLicensePlateError(licensePlateErrorId: Int?) {
+    value = value.copy(licensePlateErrorId = licensePlateErrorId)
 }
