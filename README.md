@@ -17,6 +17,7 @@ ZonaBlava is a cutting-edge Android application developed to revolutionize the w
 ## Current app state
 
 Discontinued as of June 2023. Plans are underway to rebuild the app with a modern architecture and the latest tools in Android development. 🚧  
+
 If you read the thesis and feel like you'd enjoy contributing to the new version, feel free to get in touch with me!
 
 ## Screenshots
