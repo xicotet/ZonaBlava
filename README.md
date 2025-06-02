@@ -8,8 +8,7 @@
 
 ## Introduction
 
-This project is the result of my thesis work during my Vocational Education and Training (VET) studies, specifically in Multiplatform App Development. The project's initial phase, including the thesis documentation, was completed and submitted in June 2023. However, the development of the application has continued beyond the scope of the thesis, with ongoing enhancements and updates. Feel free to check out the [PDF of the thesis](https://drive.google.com/file/d/1rUUOyTHoGvRlYACSCU2s2tGlRVlB27Eh/view?usp=sharing) (written in Spanish). 
-
+This project is the result of my thesis work during my Vocational Education and Training (VET) studies, specifically in Multiplatform App Development. The initial phase, including the thesis documentation, was completed and submitted in June 2023. Development of the app was discontinued at that point, but there are plans to refactor and rebuild the project from scratch using modern technologies. Feel free to check out the [PDF of the thesis](https://drive.google.com/file/d/1rUUOyTHoGvRlYACSCU2s2tGlRVlB27Eh/view?usp=sharing) (written in Spanish). 
 
 ## About
 
@@ -17,7 +16,8 @@ ZonaBlava is a cutting-edge Android application developed to revolutionize the w
 
 ## Current app state
 
-Under construction 🚧
+Discontinued as of June 2023. Plans are underway to rebuild the app with a modern architecture and the latest tools in Android development. 🚧  
+If you read the thesis and feel like you'd enjoy contributing to the new version, feel free to get in touch with me!
 
 ## Screenshots
 
